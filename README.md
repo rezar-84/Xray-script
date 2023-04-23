@@ -26,16 +26,16 @@ Need to access normally and can log in. Do not use the opening function I provid
 - wget
 
   ```sh
-  wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/reality.sh && bash ${HOME}/Xray-script.sh
+  wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/rezar-84/Xray-script/main/reality.sh && bash ${HOME}/Xray-script.sh
   ```
 
 - curl
 
   ```sh
-  curl -fsSL -o ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/reality.sh && bash ${HOME}/Xray-script.sh
+  curl -fsSL -o ${HOME}/Xray-script.sh https://raw.githubusercontent.com/rezar-84/Xray-script/main/reality.sh && bash ${HOME}/Xray-script.sh
   ```
 
-## 脚本界面
+## Script interface
 
 ```sh
 --------------- Xray-script ---------------
