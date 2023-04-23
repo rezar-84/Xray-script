@@ -159,7 +159,7 @@ function _systemctl() {
     systemctl -q is-active ${server_name} && _info "Re -load ${server_name} Server"
     ;;
   dr)
-    _info "正在重载 systemd 配置文件"
+    _info "Re -load systemd Configuration file"
     systemctl daemon-reload
     ;;
   esac
@@ -199,9 +199,9 @@ function select_dest() {
   local pick_dest=""
   local all_sns=""
   local sns=""
-  local prompt="请选择你的 dest, 当前默认使用 \"${cur_dest}\", 自填选 0: "
+  local prompt="Please select you dest, Currently used default \"${cur_dest}\", Self -filled election 0: "
   until [[ ${is_dest} =~ ^[Yy]$ ]]; do
-    echo -e "---------------- dest 列表 -----------------"
+    echo -e "---------------- dest List -----------------"
     _print_list "${dest_list[@]}"
     read -p "${prompt}" pick
     if [[ "${pick}" == "" && "${cur_dest}" != "" ]]; then
@@ -209,7 +209,7 @@ function select_dest() {
       break
     fi
     if ! _is_digit "${pick}" || [[ "${pick}" -lt 0 || "${pick}" -gt ${#dest_list[@]} ]]; then
-      prompt="输入错误, 请输入 0-${#dest_list[@]} 之间的数字: "
+      prompt="input error, please enter 0-${#dest_list[@]} Numbers between: "
       continue
     fi
     if [[ "${pick}" == "0" ]]; then
@@ -228,11 +228,11 @@ function select_dest() {
       sns=$(echo ${all_sns} | jq 'map(select(test("^[^*]+$"; "g")))' | jq -c 'map(select(test("^((?!cloudflare|akamaized|edgekey|edgesuite|cloudfront|azureedge|msecnd|edgecastcdn|fastly|googleusercontent|kxcdn|maxcdn|stackpathdns|stackpathcdn).)*$"; "ig")))')
       _info "Before filtering SNI"
       _print_list $(echo ${all_sns} | jq -r '.[]')
-      _info "过滤通配符后的 SNI"
+      _info "After filtering the matching SNI"
       _print_list $(echo ${sns} | jq -r '.[]')
       read -p "Please choose what you want to use serverName , Divide in English commas, Default: " pick_num
       sns=$(select_data "$(awk 'BEGIN{ORS=","} {print}' <<<"$(echo ${sns} | jq -r -c '.[]')")" "${pick_num}" | jq -R -c 'split(" ")')
-      _info "如果有更多的 serverNames 请在 /usr/local/etc/xray-script/config.json 中自行编辑"
+      _info "If more serverNames please at /usr/local/etc/xray-script/config.json Self -editing"
     else
       pick_dest="${dest_list[${pick} - 1]}"
     fi
@@ -251,9 +251,9 @@ function select_dest() {
 
 function read_domain() {
   until [[ ${is_domain} =~ ^[Yy]$ ]]; do
-    read -p "请输入域名：" domain
+    read -p "Please enter the domain name:" domain
     check_domain=$(echo ${domain} | grep -oE '[^/]+(\.[^/]+)+\b' | head -n 1)
-    read -r -p "请确认域名: \"${check_domain}\" [y/n] " is_domain
+    read -r -p "Please confirm the domain name: \"${check_domain}\" [y/n] " is_domain
   done
   domain_path=$(echo "${domain}" | sed -En "s|.*${check_domain}(/.*)?|\1|p")
   domain=${check_domain}
@@ -264,17 +264,17 @@ function read_port() {
   local cur_port="${2}"
   until [[ ${is_port} =~ ^[Yy]$ ]]; do
     echo "${prompt}"
-    read -p "请输入自定义的端口(1-65535), 默认不修改: " new_port
+    read -p "Please enter the custom port(1-65535), Do not modify the default: " new_port
     if [[ "${new_port}" == "" || ${new_port} -eq ${cur_port} ]]; then
       new_port=${cur_port}
-      _info "不修改，继续使用原端口: ${cur_port}"
+      _info "Do not modify, continue to use the original port: ${cur_port}"
       break
     fi
     if ! _is_digit "${new_port}" || [[ ${new_port} -lt 1 || ${new_port} -gt 65535 ]]; then
-      prompt="输入错误, 端口范围是 1-65535 之间的数字"
+      prompt="输入错误, The port range is 1-65535 Numbers between"
       continue
     fi
-    read -r -p "请确认端口: \"${new_port}\" [y/n] " is_port
+    read -r -p "Please confirm the port: \"${new_port}\" [y/n] " is_port
     prompt="${1}"
   done
 }
@@ -601,10 +601,10 @@ function menu() {
     ;;
   107)
     local xs_port=$(jq '.inbounds[] | select(.tag == "xray-script-xtls-reality") | .port' /usr/local/etc/xray/config.json)
-    read_port "当前 xray 监听端口为: ${xs_port}" "${xs_port}"
+    read_port "current xray The monitoring port is: ${xs_port}" "${xs_port}"
     if [[ "${new_port}" && ${new_port} -ne ${xs_port} ]]; then
       "${xray_config_manage}" -p ${new_port}
-      _info "当前 xray 监听端口已修改为: ${new_port}"
+      _info "current xray The monitoring port has been modified to: ${new_port}"
       _systemctl "restart" "xray"
       show_config
     fi
@@ -612,7 +612,7 @@ function menu() {
   108)
     _info "正在修改 shortIds"
     "${xray_config_manage}" -rsid
-    _info "已成功修改 shortIds"
+    _info "Modified successfully shortIds"
     _systemctl "restart" "xray"
     show_config
     ;;

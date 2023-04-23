@@ -150,9 +150,9 @@ function _systemctl() {
 function _read_domain() {
     until [[ ${is_domain} =~ ^[Yy]$ ]]
     do
-        read -p "请输入域名：" domain
+        read -p "Please enter the domain name:" domain
         check_domain=$(echo ${domain} | grep -oE '[^/]+(\.[^/]+)+\b' | head -n 1)
-        read -r -p  "请确认域名: \"${check_domain}\" [y/n] " is_domain
+        read -r -p  "Please confirm the domain name: \"${check_domain}\" [y/n] " is_domain
     done
     domain=${check_domain}
 }
@@ -160,10 +160,10 @@ function _read_domain() {
 function _read_ssh() {
     until [[ ${is_ssh_port} =~ ^[Yy]$ ]]
     do
-        echo "当前 ssh 连接端口为: $(sed -En "s/^[#pP].*ort\s*([0-9]*)$/\1/p" /etc/ssh/sshd_config)"
-        read -p "请输入新的 ssh 连接端口(1-65535)：" new_ssh_port
+        echo "current ssh Connection port is: $(sed -En "s/^[#pP].*ort\s*([0-9]*)$/\1/p" /etc/ssh/sshd_config)"
+        read -p "Please enter the new one ssh Connection port(1-65535)：" new_ssh_port
         [[ ${new_ssh_port} -lt 1 && ${new_ssh_port} -gt 65535 ]] && continue
-        read -r -p  "请确认端口: \"${new_ssh_port}\" [y/n] " is_ssh_port
+        read -r -p  "Please confirm the port: \"${new_ssh_port}\" [y/n] " is_ssh_port
     done
 }
 
