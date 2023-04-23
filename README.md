@@ -6,12 +6,12 @@
 - Can be customized input UUID ，非标准 UUID 将使用 `Xray uuid -i "Custom string"` Map the transformation into UUIDv5
 - accomplish dest Self -selection and self -filling
   - Implement self -fill dest TLSV1.3 and H2 verification
-  - 实现自填 dest 的 serverNames Automatic acquisition
-  - 实现自动获取的 serverNames 通配符域名与 CDN SNI 域名的过滤，dest If it is a sub -domain name, it will be added automatically serverNames 中
+  - Implement self -fill dest 的 serverNames Automatic acquisition
+  - Implement automatic Passing the domain name Passing the domain name andon serverNames Passing the domain name and CDN SNI Filter of the domain name, Dest If it is a sub -domain name, it will be added automatically serverNames 中
   - Realize the self -defined display of the self -filled DEST`fmovies.to/home` 时，client config 会显示 `spiderX: /home`
 - Default configuration forbidden to return to China, advertising, BT
 - be usable Docker deploy Cloudflare WARP Proxy
-- 实现 geo 文件的自动更新
+- accomplish geo Automatic update of files
 
 ## question
 
@@ -19,9 +19,9 @@ Use warp Open OpenAI Normal access, but still unable to log in.。
 
 I have for the help of friends who have been in the United States to try. The same account, I ca n’t go, it ’s a solution to contact the administrator. He logs in directly. Maybe I didn’t brush. IP Reason:( 。
 
-Need to access normally and can log in. Do not use the opening function I provided. Use the script[WARP 一键脚本][fscarmen]Useful IP 后，根据[分流到 WARP Client Proxy 的方法][fscarmen-warpproxy]修改 `/usr/local/etc/xray/config.json`实现 OpenAI 的正常使用。
+Need to access normally and can log in. Do not use the opening function I provided. Use the script[WARP One -key][fscarmen]Useful IP Later, according to[Divert WARP Client Proxy Methods][fscarmen-warpproxy]Revise `/usr/local/etc/xray/config.json`accomplish OpenAI Normal use.
 
-## 如何使用
+## how to use
 
 - wget
 
@@ -56,14 +56,14 @@ Need to access normally and can log in. Do not use the opening function I provid
 104. Revise dest
 105. Revise x25519 key
 106. Revise shortIds
-107. Revise xray 监听端口
+107. Revise xray Listening port
 108. Refresh the existing shortIds
 109. Additional custom shortIds
 110. use WARP Diversion, open OpenAI
 ----------------- other options ----------------
 201. Update to the latest stable core core
 202. Uninstall the excess kernel
-203. Revise ssh 端口
+203. Revise ssh port
 204. Network connection optimization
 -------------------------------------------
 ```
