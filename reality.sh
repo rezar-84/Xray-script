@@ -131,32 +131,32 @@ function _systemctl() {
   local server_name="$2"
   case "${cmd}" in
   start)
-    _info "正在启动 ${server_name} 服务"
+    _info "turning on ${server_name} Serve"
     systemctl -q is-active ${server_name} || systemctl -q start ${server_name}
     systemctl -q is-enabled ${server_name} || systemctl -q enable ${server_name}
     sleep 2
-    systemctl -q is-active ${server_name} && _info "已启动 ${server_name} 服务" || _error "${server_name} 启动失败"
+    systemctl -q is-active ${server_name} && _info "Have started ${server_name} 服务" || _error "${server_name} Startup failed"
     ;;
   stop)
-    _info "正在暂停 ${server_name} 服务"
+    _info "Being suspended ${seServeer_name} Server"
     systemctl -q is-active ${server_name} && systemctl -q stop ${server_name}
     systemctl -q is-enabled ${server_name} && systemctl -q disable ${server_name}
     sleep 2
-    systemctl -q is-active ${server_name} || _info "已暂停 ${server_name} 服务"
+    systemctl -q is-active ${server_name} || _info "Paused ${server_name} Server"
     ;;
   restart)
-    _info "正在重启 ${server_name} 服务"
+    _info "Are restarting ${server_name} Server"
     systemctl -q is-active ${server_name} && systemctl -q restart ${server_name} || systemctl -q start ${server_name}
     systemctl -q is-enabled ${server_name} || systemctl -q enable ${server_name}
     sleep 2
-    systemctl -q is-active ${server_name} && _info "已重启 ${server_name} 服务" || _error "${server_name} 启动失败"
+    systemctl -q is-active ${server_name} && _info "Restart ${server_name} Server" || _error "${server_name} Startup failed"
     ;;
   reload)
-    _info "正在重载 ${server_name} 服务"
+    _info "Re -load ${server_name} Server"
     systemctl -q is-active ${server_name} && systemctl -q reload ${server_name} || systemctl -q start ${server_name}
     systemctl -q is-enabled ${server_name} || systemctl -q enable ${server_name}
     sleep 2
-    systemctl -q is-active ${server_name} && _info "已重载 ${server_name} 服务"
+    systemctl -q is-active ${server_name} && _info "Re -load ${server_name} Server"
     ;;
   dr)
     _info "正在重载 systemd 配置文件"
@@ -213,34 +213,34 @@ function select_dest() {
       continue
     fi
     if [[ "${pick}" == "0" ]]; then
-      _warn "如果输入列表中已有域名将会导致 serverNames 被修改"
-      _warn "使用自填域名时，请确保该域名在国内的连通性"
+      _warn "If there are already domain names in the input list, the Servernames will be modified"
+      _warn "When using the domain name, make sure the domain name is connected in China"
       read_domain
-      _info "正在检查 \"${domain}\" 是否支持 TLSv1.3 与 h2"
+      _info "Checking \"${domain}\" Whether to support TLSV1.3 and H2"
       if ! _is_tlsv1_3_h2 "${domain}"; then
-        _warn "\"${domain}\" 不支持 TLSv1.3 或 h2 ，亦或者 Client Hello 不是 X25519"
+        _warn "\"${domain}\" Do not support TLSV1.3 or H2, or Client Hello is not X25519"
         continue
       fi
-      _info "\"${domain}\" 支持 TLSv1.3 与 h2"
-      _info "正在获取 Allowed domains"
+      _info "\"${domain}\" support TLSv1.3 与 h2"
+      _info "retrieving Allowed domains"
       pick_dest=${domain}
       all_sns=$(xray tls ping ${pick_dest} | sed -n '/with SNI/,$p' | sed -En 's/\[(.*)\]/\1/p' | sed -En 's/Allowed domains:\s*//p' | jq -R -c 'split(" ")' | jq --arg sni "${pick_dest}" '. += [$sni]')
       sns=$(echo ${all_sns} | jq 'map(select(test("^[^*]+$"; "g")))' | jq -c 'map(select(test("^((?!cloudflare|akamaized|edgekey|edgesuite|cloudfront|azureedge|msecnd|edgecastcdn|fastly|googleusercontent|kxcdn|maxcdn|stackpathdns|stackpathcdn).)*$"; "ig")))')
-      _info "过滤通配符前的 SNI"
+      _info "Before filtering SNI"
       _print_list $(echo ${all_sns} | jq -r '.[]')
       _info "过滤通配符后的 SNI"
       _print_list $(echo ${sns} | jq -r '.[]')
-      read -p "请选择要使用的 serverName ，用英文逗号分隔， 默认全选: " pick_num
+      read -p "Please choose what you want to use serverName , Divide in English commas, Default: " pick_num
       sns=$(select_data "$(awk 'BEGIN{ORS=","} {print}' <<<"$(echo ${sns} | jq -r -c '.[]')")" "${pick_num}" | jq -R -c 'split(" ")')
       _info "如果有更多的 serverNames 请在 /usr/local/etc/xray-script/config.json 中自行编辑"
     else
       pick_dest="${dest_list[${pick} - 1]}"
     fi
-    read -r -p "是否使用 dest: \"${pick_dest}\" [y/n] " is_dest
-    prompt="请选择你的 dest, 当前默认使用 \"${cur_dest}\", 自填选 0: "
+    read -r -p "use or notdest: \"${pick_dest}\" [y/n] " is_dest
+    prompt="Please select your Dest, the current default use \"${cur_dest}\", Self -filled election 0: "
     echo -e "-------------------------------------------"
   done
-  _info "正在修改配置"
+  _info "Modify configuration"
   [ "${domain_path}" != "" ] && pick_dest="${pick_dest}${domain_path}"
   if echo ${pick_dest} | grep -q '/$'; then
     pick_dest=$(echo ${pick_dest} | sed -En 's|/+$||p')
@@ -280,8 +280,8 @@ function read_port() {
 }
 
 function read_uuid() {
-  _info '自定义输入的 uuid ，如果不是标准格式，将会使用 xray uuid -i "自定义字符串" 进行 UUIDv5 映射后填入配置'
-  read -p "请输入自定义 UUID, 默认则自动生成: " in_uuid
+  _info 'If you are not a standard format, you will use XRAY UUID -i "custom string" to be used for UUIDV5 mapping if it is not a standard format.'
+  read -p "Please enter the custom UUID, the default is automatically generated: " in_uuid
 }
 
 function check_os() {
@@ -303,7 +303,7 @@ function check_os() {
 }
 
 function install_dependencies() {
-  _info "正在下载相关依赖"
+  _info "Download related dependencies"
   _install_update "ca-certificates openssl lsb-release curl wget jq tzdata"
   case "$(_os)" in
   centos)
@@ -316,7 +316,7 @@ function install_dependencies() {
 }
 
 function install_update_xray() {
-  _info "正在安装或更新 Xray"
+  _info "Installation or update Xray"
   _error_detect 'bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u root --beta'
   jq --arg ver "$(xray version | head -n 1 | cut -d \( -f 1 | grep -Eoi '[0-9.]*')" '.xray.version = $ver' /usr/local/etc/xray-script/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray-script/config.json
   wget -O /usr/local/etc/xray-script/update-dat.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/update-dat.sh
@@ -329,7 +329,7 @@ function install_update_xray() {
 }
 
 function purge_xray() {
-  _info "正在卸载 Xray"
+  _info "Uninstalled Xray"
   crontab -l | grep -v "/usr/local/etc/xray-script/update-dat.sh >/dev/null 2>&1" | crontab -
   _systemctl "stop" "xray"
   bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ remove --purge
@@ -349,7 +349,7 @@ function service_xray() {
 }
 
 function config_xray() {
-  _info "正在配置 xray config.json"
+  _info "Configuration xray config.json"
   "${xray_config_manage}" --path ${HOME}/config.json --download
   local xray_x25519=$(xray x25519)
   local xs_private_key=$(echo ${xray_x25519} | awk '{print $3}')
@@ -399,8 +399,8 @@ function show_config() {
     show_share_link
   else
     echo -e "------------------------------------------"
-    echo -e "${RED}此脚本仅供交流学习使用，请勿使用此脚本行违法之事。${NC}"
-    echo -e "${RED}网络非法外之地，行非法之事，必将接受法律制裁。${NC}"
+    echo -e "${RED}This script is for communication and learning only, please do not use this script line illegal。${NC}"
+    echo -e "${RED}The illegal place outside the Internet, if you do illegal things, will accept legal sanctions。${NC}"
     echo -e "------------------------------------------"
   fi
 }
@@ -428,13 +428,13 @@ function show_share_link() {
   local sl_descriptive_text='VLESS-XTLS-uTLS-REALITY'
   # select show
   _print_list "${sl_ids[@]}"
-  read -p "请选择生成分享链接的 UUID ，用英文逗号分隔， 默认全选: " pick_num
+  read -p "Please choose to, Divide in English commas, a sharing link UUID , Divide in English commas, Default: " pick_num
   sl_id=($(select_data "$(awk 'BEGIN{ORS=","} {print}' <<<"${sl_ids[@]}")" "${pick_num}"))
   _print_list "${sl_serverNames[@]}"
-  read -p "请选择生成分享链接的 serverName ，用英文逗号分隔， 默认全选: " pick_num
+  read -p "Please choose to generate a sharing link serverName , Divide in English commas, Default: " pick_num
   sl_serverNames=($(select_data "$(awk 'BEGIN{ORS=","} {print}' <<<"${sl_serverNames[@]}")" "${pick_num}"))
   _print_list "${sl_shortIds[@]}"
-  read -p "请选择生成分享链接的 shortId ，用英文逗号分隔， 默认全选: " pick_num
+  read -p "Please choose to generate a sharing link shortId , Divide in English commas, Default: " pick_num
   sl_shortIds=($(select_data "$(awk 'BEGIN{ORS=","} {print}' <<<"${sl_shortIds[@]}")" "${pick_num}"))
   echo -e "--------------- share link ---------------"
   for sl_id in "${sl_ids[@]}"; do
@@ -451,8 +451,8 @@ function show_share_link() {
     done
   done
   echo -e "------------------------------------------"
-  echo -e "${RED}此脚本仅供交流学习使用，请勿使用此脚本行违法之事。${NC}"
-  echo -e "${RED}网络非法外之地，行非法之事，必将接受法律制裁。${NC}"
+  echo -e "${RED}This script is for communication and use only. Do not use this script line illegal.${NC}"
+  echo -e "${RED}The illegal land and illegal things will accept legal sanctions.${NC}"
   echo -e "------------------------------------------"
 }
 
@@ -461,33 +461,33 @@ function menu() {
   clear
   echo -e "--------------- Xray-script ---------------"
   echo -e " Version      : ${GREEN}v2023-03-15${NC}(${RED}beta${NC})"
-  echo -e " Description  : Xray 管理脚本"
-  echo -e "----------------- 装载管理 ----------------"
-  echo -e "${GREEN}1.${NC} 安装"
-  echo -e "${GREEN}2.${NC} 更新"
-  echo -e "${GREEN}3.${NC} 卸载"
-  echo -e "----------------- 操作管理 ----------------"
+  echo -e " Description  : Xray Management script"
+  echo -e "----------------- Load management ----------------"
+  echo -e "${GREEN}1.${NC} Install"
+  echo -e "${GREEN}2.${NC} renew"
+  echo -e "${GREEN}3.${NC} Uninstalled"
+  echo -e "----------------- Operation management ----------------"
   echo -e "${GREEN}4.${NC} 启动"
-  echo -e "${GREEN}5.${NC} 停止"
-  echo -e "${GREEN}6.${NC} 重启"
-  echo -e "----------------- 配置管理 ----------------"
-  echo -e "${GREEN}101.${NC} 查看配置"
-  echo -e "${GREEN}102.${NC} 信息统计"
-  echo -e "${GREEN}103.${NC} 修改 id"
-  echo -e "${GREEN}104.${NC} 修改 dest"
-  echo -e "${GREEN}105.${NC} 修改 x25519 key"
-  echo -e "${GREEN}106.${NC} 修改 shortIds"
-  echo -e "${GREEN}107.${NC} 修改 xray 监听端口"
-  echo -e "${GREEN}108.${NC} 刷新已有的 shortIds"
-  echo -e "${GREEN}109.${NC} 追加自定义的 shortIds"
-  echo -e "${GREEN}110.${NC} 使用 WARP 分流，开启 OpenAI"
-  echo -e "----------------- 其他选项 ----------------"
-  echo -e "${GREEN}201.${NC} 更新至最新稳定版内核"
-  echo -e "${GREEN}202.${NC} 卸载多余内核"
-  echo -e "${GREEN}203.${NC} 修改 ssh 端口"
-  echo -e "${GREEN}204.${NC} 网络连接优化"
+  echo -e "${GREEN}5.${NC} stopped"
+  echo -e "${GREEN}6.${NC} Heavy."
+  echo -e "----------------- Configuration management ----------------"
+  echo -e "${GREEN}101.${NC} View configuration"
+  echo -e "${GREEN}102.${NC} Information statistics"
+  echo -e "${GREEN}103.${NC} Modify ID"
+  echo -e "${GREEN}104.${NC} Modify Dest"
+  echo -e "${GREEN}105.${NC} Modify X25519 Key"
+  echo -e "${GREEN}106.${NC} Modify shortids"
+  echo -e "${GREEN}107.${NC} Modify the XRAY monitor port"
+  echo -e "${GREEN}108.${NC} refresh the existing shortids"
+  echo -e "${GREEN}109.${NC} Additional customized SHORTIDS"
+  echo -e "${GREEN}110.${NC} Use warp to divert and open Openai"
+  echo -e "----------------- other options ----------------"
+  echo -e "${GREEN}201.${NC} Update to the latest stable version kernel"
+  echo -e "${GREEN}202.${NC} Uninstall the excess kernel"
+  echo -e "${GREEN}203.${NC} Modify the SSH port"
+  echo -e "${GREEN}204.${NC} Network Connection Optimization"
   echo -e "-------------------------------------------"
-  echo -e "${RED}0.${NC} 退出"
+  echo -e "${RED}0.${NC} quit"
   read -rp "Choose: " idx
   ! _is_digit "${idx}" && _error "请输入正确的选项值"
   if [[ ! -d /usr/local/etc/xray-script && (${idx} -ne 0 && ${idx} -ne 1 && ${idx} -lt 201) ]]; then
@@ -515,14 +515,14 @@ function menu() {
     fi
     ;;
   2)
-    _info "判断 Xray 是否用新版本"
+    _info "Judgment Xray Whether to use a new version"
     local current_xray_version="$(jq -r '.xray.version' /usr/local/etc/xray-script/config.json)"
     local latest_xray_version="$(wget -qO- --no-check-certificate https://api.github.com/repos/XTLS/Xray-core/releases | jq -r '.[0].tag_name ' | cut -d v -f 2)"
     if [ "${latest_xray_version}" != "${current_xray_version}" ] && _version_ge "${latest_xray_version}" "${current_xray_version}"; then
-      _info "检测到有新版可用"
+      _info "The new version is available for detecting"
       install_update_xray
     else
-      _info "当前已是最新版本: ${current_xray_version}"
+      _info "It is currently the latest version: ${current_xray_version}"
     fi
     ;;
   3)
@@ -539,8 +539,8 @@ function menu() {
       docker image rm e7h4n/cloudflare-warp
     fi
     rm -rf ${HOME}/.warp
-    _info 'Docker 请自行卸载'
-    _info "已经完成卸载"
+    _info 'Docker Please uninstall it yourself'
+    _info "Already completed uninstalled"
     ;;
   4)
     _systemctl "start" "xray"
@@ -560,18 +560,18 @@ function menu() {
     ;;
   103)
     read_uuid
-    _info "正在修改用户 id"
+    _info "Modify the user id"
     "${xray_config_manage}" -u "${in_uuid}"
-    _info "已成功修改用户 id"
+    _info "Successfully modified users id"
     _systemctl "restart" "xray"
     show_config
     ;;
   104)
-    _info "正在修改 dest 与 serverNames"
+    _info "under revision dest and serverNames"
     select_dest
     "${xray_config_manage}" -d "$(jq -r '.xray.dest' /usr/local/etc/xray-script/config.json | grep -Eoi '([a-zA-Z0-9](\-?[a-zA-Z0-9])*\.)+[a-zA-Z]{2,}')"
     "${xray_config_manage}" -sn "$(jq -c -r '.xray | .serverNames[.dest] | .[]' /usr/local/etc/xray-script/config.json | tr '\n' ',')"
-    _info "已成功修改 dest 与 serverNames"
+    _info "Modified successfully dest and serverNames"
     _systemctl "restart" "xray"
     show_config
     ;;
@@ -585,17 +585,17 @@ function menu() {
     jq --arg publicKey "${xs_public_key}" '.xray.publicKey = $publicKey' /usr/local/etc/xray-script/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray-script/config.json
     # Xray-core config.json
     "${xray_config_manage}" -x "${xs_private_key}"
-    _info "已成功修改 x25519 key"
+    _info "Modified successfully x25519 key"
     _systemctl "restart" "xray"
     show_config
     ;;
   106)
-    _info "shortId 值定义: 接受一个十六进制数值 ，长度为 2 的倍数，长度上限为 16"
-    _info "shortId 列表默认为值为[\"\"]，若有此项，客户端 shortId 可为空"
-    read -p "请输入自定义 shortIds 值，多个值以英文逗号进行分隔: " sid_str
-    _info "正在修改 shortIds"
+    _info "shortId Value definition: Accept a hexadecimal value The length is 2 The multiple of the length of length is 16"
+    _info "shortId List default value is[\"\"]，If there is this, the client shortId 可为空"
+    read -p "Please enter custom shortIds Value, multiple values are separated by English comma: " sid_str
+    _info "under revision shortIds"
     "${xray_config_manage}" -sid "${sid_str}"
-    _info "已成功修改 shortIds"
+    _info "Modified successfully shortIds"
     _systemctl "restart" "xray"
     show_config
     ;;
@@ -618,33 +618,33 @@ function menu() {
     ;;
   109)
     until [ ${#sid_str} -gt 0 ] && [ ${#sid_str} -le 16 ] && [ $((${#sid_str} % 2)) -eq 0 ]; do
-      _info "shortId 值定义: 接受一个十六进制数值 ，长度为 2 的倍数，长度上限为 16"
-      read -p "请输入自定义 shortIds 值，不能为空，多个值以英文逗号进行分隔: " sid_str
+      _info "shortId Definition: Accept a hexadecimal value, multiple length of 2, and the upper limit of length is 16"
+      read -p "Please enter custom shortIds Value, not empty, multiple values are separated by English comma: " sid_str
     done
-    _info "正在添加自定义 shortIds"
+    _info "Customized shortIds"
     "${xray_config_manage}" -asid "${sid_str}"
-    _info "已成功添加自定义 shortIds"
+    _info "Successful adding custom shortIds"
     _systemctl "restart" "xray"
     show_config
     ;;
   110)
     if ! _exists "docker"; then
-      read -r -p "脚本使用 Docker 进行 WARP 管理，是否安装 Docker [y/n] " is_docker
+      read -r -p "The script uses docker for warp management, whether to installDocker [y/n] " is_docker
       if [[ ${is_docker} =~ ^[Yy]$ ]]; then
         curl -fsSL https://get.docker.com | sh
       else
-        _warn "取消分流操作"
+        _warn "Cancel the diversion operation"
         exit 0
       fi
     fi
     if docker ps | grep -q cloudflare-warp; then
-      _info "WARP 已开启，请勿重复设置"
+      _info "WARP Has been opened, please do not repeat the settings"
     else
-      _info "正在获取并启动 cloudflare-warp 镜像"
+      _info "Getting and starting Cloudflare-WARP mirror"
       docker run -v $HOME/.warp:/var/lib/cloudflare-warp:rw --restart=always --name=cloudflare-warp e7h4n/cloudflare-warp
-      _info "正在配置 routing"
+      _info "Being configured ROUTING"
       local routing='{"type":"field","domain":["domain:ipinfo.io","domain:ip.sb","geosite:openai"],"outboundTag":"warp"}'
-      _info "正在配置 outbounds"
+      _info "Configuration outbounds"
       local outbound=$(echo '{"tag":"warp","protocol":"socks","settings":{"servers":[{"address":"172.17.0.2","port":40001}]}}' | jq -c --arg addr "$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cloudflare-warp)" '.settings.servers[].address = $addr')
       jq --argjson routing "${routing}" '.routing.rules += [$routing]' /usr/local/etc/xray/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray/config.json
       jq --argjson outbound "${outbound}" '.outbounds += [$outbound]' /usr/local/etc/xray/config.json >/usr/local/etc/xray-script/new.json && mv -f /usr/local/etc/xray-script/new.json /usr/local/etc/xray/config.json
@@ -660,15 +660,15 @@ function menu() {
     ;;
   203)
     local ssh_port=$(sed -En "s/^[#pP].*ort\s*([0-9]*)$/\1/p" /etc/ssh/sshd_config)
-    read_port "当前 ssh 连接端口为: ${ssh_port}" "${ssh_port}"
+    read_port "The current SSH connection port is: ${ssh_port}" "${ssh_port}"
     if [[ "${new_port}" && ${new_port} -ne ${ssh_port} ]]; then
       sed -i "s/^[#pP].*ort\s*[0-9]*$/Port ${new_port}/" /etc/ssh/sshd_config
       systemctl restart sshd
-      _info "当前 ssh 连接端口已修改为: ${new_port}"
+      _info "The current SSH connection port has been modified:: ${new_port}"
     fi
     ;;
   204)
-    read -r -p "是否选择网络连接优化 [y/n] " is_opt
+    read -r -p "Whether to select network connection optimization [y/n] " is_opt
     if [[ ${is_opt} =~ ^[Yy]$ ]]; then
       [ -f /usr/local/etc/xray-script/sysctl.conf.bak ] || cp -af /etc/sysctl.conf /usr/local/etc/xray-script/sysctl.conf.bak
       wget -O /etc/sysctl.conf https://raw.githubusercontent.com/zxcvos/Xray-script/main/config/sysctl.conf
@@ -679,7 +679,7 @@ function menu() {
     exit 0
     ;;
   *)
-    _error "请输入正确的选项值"
+    _error "Please enter the correct option value"
     ;;
   esac
 }

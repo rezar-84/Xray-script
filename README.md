@@ -1,109 +1,115 @@
-# Xray-REALITY 管理脚本
+# Xray-reality management script
 
-* 一个纯 Shell 编写的 REALITY 管理脚本
-* 使用 VLESS-XTLS-uTLS-REALITY 配置
-* 实现 xray 监听端口的自填
-* 可自定义输入 UUID ，非标准 UUID 将使用 `Xray uuid -i "自定义字符串"` 进行映射转化为 UUIDv5
-* 实现 dest 的自选与自填
-  * 实现自填 dest 的 TLSv1.3 与 H2 验证
-  * 实现自填 dest 的 serverNames 自动获取
-  * 实现自动获取的 serverNames 通配符域名与 CDN SNI 域名的过滤，dest 如果是子域名将会自动加入到 serverNames 中
-  * 实现自填 dest 的 spiderX 的自定义显示，例如：自填 dest 为 `fmovies.to/home` 时，client config 会显示 `spiderX: /home`
-* 默认配置禁回国流量、广告、bt
-* 可使用 Docker 部署 Cloudflare WARP Proxy
-* 实现 geo 文件的自动更新
+- Reality management script written by pure shell
+- Use VLESS-XTLS-URITY configuration
+- Implement the self -filling of the XRAY listening port
+- You can customize the input UUID. Non -standard UUID will use the `xray uuid -i" custom string "` ` ` ` `
+- Realize the self -selection and self -filling of Dest
+  - Implement the TLSV1.3 and H2 verification of the self -filled Dest
+  - Realize the server of self -obtain automatic acquisition of DEST
+  - Realize the filtering of the automatic obtained ServerNames incentive domain name and the CDN SNI domain name. DEST will automatically add it to Servernames if it is a sub -domain name
+  - Realize the self -defined display of the SPIDERX self -filled Dest, for example: when the Dest is `fmovies.to /home`, the client config will display` spiderx: /home`
+- Default configuration forbidden to return to China, advertising, BT
+- You can use Docker to deploy Cloudflare Warp Proxy
+- Implement automatic update of Geo files
 
-## 问题
+## question
 
-虽然使用 warp 开启了 OpenAI 的正常访问，但是还是无法登陆。
+Although the normal access of OpenAI was opened using Warp, it still couldn't log in.
 
-已经让肉体在美国的朋友帮忙试了，同一个账号，我这上不去，爆出要联系管理员解决，他那里直接登录成功了，可能是我没刷 IP 的缘故:( 。
+I have for the help of friends who have been in the United States to try. The same account, I ca n’t go here, and I have to contact the administrator to solve it. He ’s directly logging in to it. It may be because I did n’t brush the IP: (.
 
-需要正常访问且能登陆的建议不要使用我提供的这个开启功能，去用脚本[WARP 一键脚本][fscarmen]刷出能用的 IP 后，根据[分流到 WARP Client Proxy 的方法][fscarmen-warpproxy]修改 `/usr/local/etc/xray/config.json`实现 OpenAI 的正常使用。
+Need to access normally and can log in, do not use the opening function I provided, use the script [warp one-key hell] [fscarmen] to brush out the IP you can use, according to the method of [Fscarmen-method that is diverted to the warp client proxy]Warpproxy] Modify `/USR/LOCAL/ETC/XRAY/Config.json` to achieve the normal use of Openai.
 
-## 如何使用
+## how to use
 
-* wget
+- WGET
 
-  ```sh
-  wget --no-check-certificate -O ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/reality.sh && bash ${HOME}/Xray-script.sh
-  ```
+  `` `SH
+Wget --no-Check-CERTIFICATE -O $ {Home} /xray-script.sh https://raw.githubusercontent.com/zxcvos/xray-script/reality.sh & {Home}/XRay--script.sh `` `
 
-* curl
+- CURL
 
-  ```sh
-  curl -fsSL -o ${HOME}/Xray-script.sh https://raw.githubusercontent.com/zxcvos/Xray-script/main/reality.sh && bash ${HOME}/Xray-script.sh
-  ```
+  `` `SH
+Curl -FSSL -O $ {Home} /xray-script.sh https://raw.githubusercontent.com/zxcvos/xray-script/main/reality.sh && {Home} /xray-script.sh `` `
 
-## 脚本界面
+## script interface
 
-```sh
---------------- Xray-script ---------------
- Version      : v2023-03-15(beta)
- Description  : Xray 管理脚本
------------------ 装载管理 ----------------
-1. 安装
-2. 更新
-3. 卸载
------------------ 操作管理 ----------------
-4. 启动
-5. 停止
-6. 重启
------------------ 配置管理 ----------------
-101. 查看配置
-102. 信息统计
-103. 修改 id
-104. 修改 dest
-105. 修改 x25519 key
-106. 修改 shortIds
-107. 修改 xray 监听端口
-108. 刷新已有的 shortIds
-109. 追加自定义的 shortIds
-110. 使用 WARP 分流，开启 OpenAI
------------------ 其他选项 ----------------
-201. 更新至最新稳定版内核
-202. 卸载多余内核
-203. 修改 ssh 端口
-204. 网络连接优化
--------------------------------------------
-```
+## `` `SH
 
-## 客户端配置
+Version: v2023-03-15 (beta)
+Description: xray management script
 
-| 名称 | 值 |
-| :--- | :--- |
-| 地址 | IP 或服务端的域名 |
-| 端口 | 443 |
-| 用户ID | xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx |
-| 流控 | xtls-rprx-vision |
-| 传输协议 | tcp |
-| 传输层安全 | reality |
-| SNI | learn.microsoft.com |
-| Fingerprint | chrome |
-| PublicKey | wC-8O2vI-7OmVq4TVNBA57V_g4tMDM7jRXkcBYGMYFw |
-| shortId | 6ba85179e30d4fc2 |
-| spiderX | / |
+---
 
-## 致谢
+1. Installation
+2. Update
+3. UninStall
 
-[Xray-core][Xray-core]
+---
 
-[REALITY][REALITY]
+4. Start
+5. STOP
+6. Restart
 
-[chika0801 Xray 配置文件模板][chika0801-Xray-examples]
+---
 
-[部署 Cloudflare WARP Proxy][haoel]
+101. View Configuration
+102. Information
+103. Modify ID
+104. Modify Dest
+105. Modify X25519 KEY
+106. Modify Shortids
+107. Modify xray Monitoring Port
+108. Refresh The Existing Shortids
+109. Additional Customized Shortids
+110. Use Warp Diversion and Turn on Openai
+     ---------------- other options ------------------------------------------------------------
+111. Update to the Latest Stable Version Kernel
+112. UninStall The Excess Kernel
+113. Modify the ssh port
+114. Network Connection Optimization
 
-[cloudflare-warp 镜像][e7h4n]
+---
 
-[WARP 一键脚本][fscarmen]
+`` `
 
-**此脚本仅供交流学习使用，请勿使用此脚本行违法之事。网络非法外之地，行非法之事，必将接受法律制裁。**
+## client configuration
 
-[Xray-core]: https://github.com/XTLS/Xray-core (THE NEXT FUTURE)
-[REALITY]: https://github.com/XTLS/REALITY (THE NEXT FUTURE)
-[chika0801-Xray-examples]: https://github.com/chika0801/Xray-examples (chika0801 Xray 配置文件模板)
-[haoel]: https://github.com/haoel/haoel.github.io#943-docker-%E4%BB%A3%E7%90%86 (使用 Docker 快速部署 Cloudflare WARP Proxy)
-[e7h4n]: https://github.com/e7h4n/cloudflare-warp (cloudflare-warp 镜像)
-[fscarmen]: https://github.com/fscarmen/warp (WARP 一键脚本)
-[fscarmen-warpproxy]: https://github.com/fscarmen/warp/blob/main/README.md#Netflix-%E5%88%86%E6%B5%81%E5%88%B0-WARP-Client-ProxyWireProxy-%E7%9A%84%E6%96%B9%E6%B3%95 (Netflix 分流到 WARP Client Proxy、WireProxy 的方法)
+| Name                  | Value                                      |
+| --------------------- | :----------------------------------------- | --- |
+| Address               | IP or server domain name                   |
+| Port                  | 443                                        |
+| User ID               | xxxxxxx-xxxx-xxxx-xxxxxxxxxxxxx            |
+| Flowing Control       | XTLS-RPRX-VISION                           |
+| Transmission Protocol | TCP                                        |
+| Transfer layer safety | Reality                                    |
+| SNI                   | Learn.microSoft.com                        |
+| Fingerprint           | Chrome                                     |
+| Publickey             | WC-8O2VI-7MVQ4TVNBA57V_G4TMDM7JRXKCBYGMYFW |
+| Shortid               | 6ba85179E30D4FC2                           |
+| spiderx               | /                                          |     |
+
+## thanks
+
+[Xray-core] [xray-core]
+
+[Reality] [Reality]
+
+[chika0801 xray configuration file template] [chika0801-xray-spie
+
+[Deploy Cloudflare Warp Proxy] [haoel]
+
+[Cloudflare-WARP image] [E7H4N]
+
+[WARP One -button Discovery] [FSCARMEN]
+
+** This script is for communication and use only. Do not use this script line that illegally.The illegal land and illegal things will accept legal sanctions.**
+
+[Xray-core]: https://github.com/Xtls/xray-core "The Next Future"
+[Reality]: https://github.com/xtls/reality "the next future"
+[chika0801-xray-examples]: https://github.com/chika0801/xray-examples "chika0801 xRay configuration file template"
+[haoel]: https://github.com/haoel/haoel.github.io#943-docker-%E4%BB%A3%E7%90%86 "Use Docker to quickly deploy Cloudflare Warp Proxy"
+[E7H4N]: https://github.com/e7h4n/Cloudflare-powerful
+[fscarmen]: https://github.com/fscarmen/warp "warp one -key reward"
+[fscarmen-narpprooxy]: https://github.com/fscarmen/blob/readme.md#netflix-%E5%886%E6%B5%88%B0-rient-ProxywireProxy-%E7%9A%84%E6%96%B9%E6%B3%95 "Netflix to Warp Client Proxy, WireProxy"
