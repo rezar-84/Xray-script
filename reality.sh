@@ -221,7 +221,7 @@ function select_dest() {
         _warn "\"${domain}\" Do not support TLSV1.3 or H2, or Client Hello is not X25519"
         continue
       fi
-      _info "\"${domain}\" support TLSv1.3 与 h2"
+      _info "\"${domain}\" support TLSv1.3 and h2"
       _info "retrieving Allowed domains"
       pick_dest=${domain}
       all_sns=$(xray tls ping ${pick_dest} | sed -n '/with SNI/,$p' | sed -En 's/\[(.*)\]/\1/p' | sed -En 's/Allowed domains:\s*//p' | jq -R -c 'split(" ")' | jq --arg sni "${pick_dest}" '. += [$sni]')

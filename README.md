@@ -3,7 +3,7 @@
 - A Reality management script written by pure shell
 - Use VLESS-XTLS-UTLS-Reality configuration
 - Realize the self -filling of the XRAY listening port
-- Can be customized input UUID ，非标准 UUID 将使用 `Xray uuid -i "Custom string"` Map the transformation into UUIDv5
+- Can be customized input UUID Non -standard UUID Will use `Xray uuid -i "Custom string"` Map the transformation into UUIDv5
 - accomplish dest Self -selection and self -filling
   - Implement self -fill dest TLSV1.3 and H2 verification
   - Implement self -fill dest 的 serverNames Automatic acquisition
