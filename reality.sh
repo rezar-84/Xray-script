@@ -23,19 +23,19 @@ declare domain_path
 declare new_port
 
 function _info() {
-  printf "${GREEN}[信息] ${NC}"
+  printf "${GREEN}[information] ${NC}"
   printf -- "%s" "$1"
   printf "\n"
 }
 
 function _warn() {
-  printf "${YELLOW}[警告] ${NC}"
+  printf "${YELLOW}[warn] ${NC}"
   printf -- "%s" "$1"
   printf "\n"
 }
 
 function _error() {
-  printf "${RED}[错误] ${NC}"
+  printf "${RED}[mistake] ${NC}"
   printf -- "%s" "$1"
   printf "\n"
   exit 1
@@ -271,7 +271,7 @@ function read_port() {
       break
     fi
     if ! _is_digit "${new_port}" || [[ ${new_port} -lt 1 || ${new_port} -gt 65535 ]]; then
-      prompt="输入错误, The port range is 1-65535 Numbers between"
+      prompt="input error, The port range is 1-65535 Numbers between"
       continue
     fi
     read -r -p "Please confirm the port: \"${new_port}\" [y/n] " is_port
@@ -393,7 +393,7 @@ function show_config() {
   echo -e "ShortId     : ${xs_shortIds%,}"
   echo -e "SpiderX     : ${xs_spiderX}"
   echo -e "------------------------------------------"
-  read -p "是否生成分享链接[y/n]: " is_show_share_link
+  read -p "Whether to generate a sharing link[y/n]: " is_show_share_link
   echo
   if [[ ${is_show_share_link} =~ ^[Yy]$ ]]; then
     show_share_link
@@ -467,7 +467,7 @@ function menu() {
   echo -e "${GREEN}2.${NC} renew"
   echo -e "${GREEN}3.${NC} Uninstalled"
   echo -e "----------------- Operation management ----------------"
-  echo -e "${GREEN}4.${NC} 启动"
+  echo -e "${GREEN}4.${NC} start up"
   echo -e "${GREEN}5.${NC} stopped"
   echo -e "${GREEN}6.${NC} Heavy."
   echo -e "----------------- Configuration management ----------------"
@@ -489,9 +489,9 @@ function menu() {
   echo -e "-------------------------------------------"
   echo -e "${RED}0.${NC} quit"
   read -rp "Choose: " idx
-  ! _is_digit "${idx}" && _error "请输入正确的选项值"
+  ! _is_digit "${idx}" && _error "Please enter the correct option value"
   if [[ ! -d /usr/local/etc/xray-script && (${idx} -ne 0 && ${idx} -ne 1 && ${idx} -lt 201) ]]; then
-    _error "未使用 Xray-script 进行安装"
+    _error "Unused Xray-script Installation"
   fi
   if [ -d /usr/local/etc/xray-script ] && ([ ${idx} -gt 102 ] || [ ${idx} -lt 111 ]); then
     wget -qO ${xray_config_manage} https://raw.githubusercontent.com/zxcvos/Xray-script/main/tool/xray_config_manage.sh
@@ -507,7 +507,7 @@ function menu() {
       install_dependencies
       install_update_xray
       local xs_port=$(jq '.xray.port' /usr/local/etc/xray-script/config.json)
-      read_port "xray config 配置默认使用: ${xs_port}" "${xs_port}"
+      read_port "xray config Configuration default: ${xs_port}" "${xs_port}"
       read_uuid
       select_dest
       config_xray
@@ -530,12 +530,12 @@ function menu() {
     [ -f /usr/local/etc/xray-script/sysctl.conf.bak ] && mv -f /usr/local/etc/xray-script/sysctl.conf.bak /etc/sysctl.conf && _info "已还原网络连接设置"
     rm -rf /usr/local/etc/xray-script
     if docker ps | grep -q cloudflare-warp; then
-      _info '正在停止 cloudflare-warp'
+      _info 'Stop cloudflare-warp'
       docker container stop cloudflare-warp
       docker container rm cloudflare-warp
     fi
     if docker images | grep -q e7h4n/cloudflare-warp; then
-      _info '正在卸载 cloudflare-warp'
+      _info 'Uninstalled cloudflare-warp'
       docker image rm e7h4n/cloudflare-warp
     fi
     rm -rf ${HOME}/.warp
@@ -591,7 +591,7 @@ function menu() {
     ;;
   106)
     _info "shortId Value definition: Accept a hexadecimal value The length is 2 The multiple of the length of length is 16"
-    _info "shortId List default value is[\"\"]，If there is this, the client shortId 可为空"
+    _info "shortId List default value is[\"\"]，If there is this, the client shortId Can be empty"
     read -p "Please enter custom shortIds Value, multiple values are separated by English comma: " sid_str
     _info "under revision shortIds"
     "${xray_config_manage}" -sid "${sid_str}"
@@ -610,7 +610,7 @@ function menu() {
     fi
     ;;
   108)
-    _info "正在修改 shortIds"
+    _info "under revision shortIds"
     "${xray_config_manage}" -rsid
     _info "Modified successfully shortIds"
     _systemctl "restart" "xray"
